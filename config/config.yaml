@@ -1,0 +1,52 @@
+# device: "cuda" | "cpu"
+device: cuda
+seed: 385
+
+# hyperparameters and model type
+# momentum:         momentum settings for SGD  
+epochs: 500
+batch_size: 128
+workers: 8
+#-------------------
+optimizer: "AdamW"
+nesterov: True
+lr: 1.e-3
+min_lr: 1.e-6
+momentum: 0.9
+weight_decay: 1.e-4
+
+grad_clip: 1.
+
+#-------------------
+scheduler: "CosineAnnealingLR"
+# weight_decay: 0.01
+train_error: 0.001       # when to stop training
+
+model: "unet"
+checkpoint_path: ""
+pretrained: False
+
+# unet configurations
+upperbound: 1000
+dropout_ratio: 0.15
+
+# Simulation dataset configurations
+dataset: "bsd"
+data_path: "/mnt/ssd/Datasets/berkeley/"
+# dataset: "fmnist"
+# data_path: "/mnt/ex-ssd/Datasets/fmnist/"
+# dataset: "cifar10"
+# data_path: "/mnt/ssd/Datasets/cifar10"
+
+# prior distribution configurations
+shape: 1
+scale: 2000
+
+# Log configurations
+output_folder: "experiments"
+test_interval: 2
+print_every:   30
+visualize_every: 1
+log_level:   "INFO"
+log_file:    "./train.log"
+
