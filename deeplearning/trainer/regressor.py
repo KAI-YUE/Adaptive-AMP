@@ -39,7 +39,7 @@ class UnetRegressorTrainer(nn.Module):
         noisy_data = torch.clone(x)
         for i in range(num_samples):
             s = torch.sqrt(s2[i])
-            noisy_data[i] += torch.randn_like(x[i]) * s/(np.sqrt(255))
+            noisy_data[i] += torch.randn_like(x[i]) * s / self.config.denominator
             index_ = torch.round(s)
             index_ = index_.to(torch.int) if index_ < self.upperbound else self.upperbound - 1
             s_[i] = index_
@@ -79,7 +79,8 @@ def test_regressor(test_loader, network, epoch, config, logger, record):
         for j in range(num_samples):
             s = torch.sqrt(s2[j]) 
             s = torch.round(s).to(torch.int).to(x.device) if s < config.upperbound else config.upperbound - 1
-            noisy_data[j] += torch.randn_like(x[j]) * s/(np.sqrt(255))
+            noisy_data[j] += torch.randn_like(x[j]) * s / config.denominator
+
             s_[j] = s
 
         # Compute output

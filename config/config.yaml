@@ -4,7 +4,7 @@ seed: 385
 
 # hyperparameters and model type
 # momentum:         momentum settings for SGD  
-epochs: 500
+epochs: 50
 batch_size: 128
 workers: 8
 #-------------------
@@ -41,6 +41,8 @@ data_path: "/mnt/ssd/Datasets/berkeley/"
 # prior distribution configurations
 shape: 1
 scale: 2000
+
+denominator: 255
 
 # Log configurations
 output_folder: "experiments"
