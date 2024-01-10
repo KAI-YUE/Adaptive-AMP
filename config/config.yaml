@@ -1,10 +1,12 @@
 # device: "cuda" | "cpu"
 device: cuda
 seed: 385
+debug: True
+debug: False
 
 # hyperparameters and model type
 # momentum:         momentum settings for SGD  
-epochs: 50
+epochs: 150
 batch_size: 128
 workers: 8
 #-------------------
@@ -35,19 +37,19 @@ dataset: "bsd"
 data_path: "/mnt/ssd/Datasets/berkeley/"
 # dataset: "fmnist"
 # data_path: "/mnt/ex-ssd/Datasets/fmnist/"
-# dataset: "cifar10"
-# data_path: "/mnt/ssd/Datasets/cifar10"
+dataset: "cifar10"
+data_path: "/mnt/ssd/Datasets/cifar10"
 
 # prior distribution configurations
 shape: 1
 scale: 2000
 
-denominator: 255
+denominator: 10000
 
 # Log configurations
 output_folder: "experiments"
-test_interval: 2
-print_every:   30
+test_interval: 1
+print_every:   10
 visualize_every: 1
 log_level:   "INFO"
 log_file:    "./train.log"

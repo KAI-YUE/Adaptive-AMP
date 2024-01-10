@@ -93,6 +93,9 @@ def train(train_loader, network, optimizer, scheduler, epoch, config, logger, re
     end = time.time()
     for i, (contents, _) in enumerate(train_loader):
         # if i != len(train_loader)-1: continue
+        if config.debug:
+            if i != len(train_loader)-1: continue
+
         optimizer.zero_grad()
 
         contents = contents.to(config.device)

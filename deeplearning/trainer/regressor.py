@@ -37,17 +37,23 @@ class UnetRegressorTrainer(nn.Module):
         s_ = torch.zeros_like(s2).to(torch.int)
 
         noisy_data = torch.clone(x)
+        noise = torch.zeros_like(x)
         for i in range(num_samples):
             s = torch.sqrt(s2[i])
-            noisy_data[i] += torch.randn_like(x[i]) * s / self.config.denominator
+            noise[i] = torch.randn_like(x[i]) * s / self.config.denominator
+            noisy_data[i] += noise[i]
             index_ = torch.round(s)
             index_ = index_.to(torch.int) if index_ < self.upperbound else self.upperbound - 1
             s_[i] = index_
 
         # print(s_)
 
-        denoised = self.model(noisy_data, s_)
-        loss = self.criterion(denoised, x)
+        # denoised = self.model(noisy_data, s_)
+        # loss = self.criterion(denoised, x)
+        
+        pred_noise = self.model(noisy_data, s_)
+        loss = self.criterion(pred_noise, noise)
+
         return loss
     
 
@@ -76,17 +82,19 @@ def test_regressor(test_loader, network, epoch, config, logger, record):
         s_ = torch.zeros_like(s2).to(torch.int)
 
         noisy_data = torch.clone(x)
+        noise = torch.zeros_like(x)
         for j in range(num_samples):
             s = torch.sqrt(s2[j]) 
             s = torch.round(s).to(torch.int).to(x.device) if s < config.upperbound else config.upperbound - 1
-            noisy_data[j] += torch.randn_like(x[j]) * s / config.denominator
-
+            noise[j] = torch.randn_like(x[j]) * s / config.denominator
+            noisy_data[j] += noise[j]
             s_[j] = s
 
         # Compute output
         with torch.no_grad():
             output = network(noisy_data, s_)
-            loss = criterion(output, x).mean()
+            # loss = criterion(output, x).mean()
+            loss = criterion(output, noise)
 
         # Measure accuracy and record loss
         losses.update(loss.data.item(), x.size(0))
@@ -97,7 +105,7 @@ def test_regressor(test_loader, network, epoch, config, logger, record):
 
         if i % config.visualize_every == 0:
             # visualize?
-            sample_save(config, x, noisy_data, output, epoch)
+            sample_save(config, x, noisy_data, noisy_data - output, epoch)
 
     logger.info('Test error: * Err :{:.3f}'.format(losses.avg))
     record["test_loss"].append(losses.avg)
