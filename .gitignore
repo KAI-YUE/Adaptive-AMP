@@ -8,6 +8,7 @@
 experiments/
 log/
 checkpoints/
+cifar10/
 
 # C extensions
 *.so
