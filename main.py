@@ -19,7 +19,6 @@ def train_ampnet(config, dataset, logger):
     train_loader, test_loader = fetch_dataloader(config, dst_train, dst_test)
 
     lowest_err, best_epoch = np.inf, 0
-    config.include_sensitive_this_epoch = False
 
     for epoch in range(start_epoch, config.epochs):
         # train for one epoch
